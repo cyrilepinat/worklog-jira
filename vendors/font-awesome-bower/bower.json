@@ -1,0 +1,27 @@
+{
+  "authors": ["dev@intervalbraining.com"],
+  "description": "Font-Awesome bower component with reduced footprint",
+  "devDependencies": {
+    "fontawesome": "~4.1.0"
+  },
+  "homepage": "https://github.com/interval-braining/font-awesome-bower",
+  "ignore": [
+    "**/.*",
+    "bower_components"
+  ],
+  "keywords": [
+    "fontawesome",
+    "Font-Awesome"
+  ],
+  "license": "MIT",
+  "main": [
+    "css/font-awesome.css",
+    "fonts/FontAwesome.otf",
+    "fonts/fontawesome-webfont.eot",
+    "fonts/fontawesome-webfont.svg",
+    "fonts/fontawesome-webfont.ttf",
+    "fonts/fontawesome-webfont.woff"
+  ],
+  "name": "angular-ui-router-breadcrumbs",
+  "version": "4.1.0"
+}

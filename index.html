@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Worklog - Jira</title>
+    <link rel="stylesheet" href="css/body.css">
+    <link rel="stylesheet" href="vendors/bootstrap-css-only/css/bootstrap.min.css">
+    <link rel="stylesheet" href="vendors/select2/select2.css">
+    <link rel="stylesheet" href="vendors/font-awesome-bower/css/font-awesome.css">
+
+</head>
+
+<body ng-app="worklogApp">
+
+    <div id="wrapper" ng-controller="MainCtrl">
+        <h1>Worklog for Jira</h1>
+        <p>Application permettant de vérifier les temps passés</p>
+
+        <form class="form-inline" role="form" ng-submit="search()">
+
+            <div class="form-group">
+                <label class="sr-only" for="selectUser">Start date</label>
+                <select ui-select2="selectUserConfig" ng-model="selectedUser" ng-change="valueChanged(selectedUser)">
+                    <option value=""></option>
+                    <option ng-repeat="user in users" value="{{user}}">{{user}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="startDate">Start date</label>
+                <input type="text" class="form-control" id="startDate" ng-model="startDate" placeholder="Enter a start date">
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="endDate">End date</label>
+                <input type="text" class="form-control" id="endDate" ng-model="endDate" placeholder="Enter a end date">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button><i ng-if="!finished" class="fa fa-spinner fa-spin fa-lg fa-fw"></i>
+        </form>
+
+        <div id="results-box">
+
+            <div class="jumbotron" ng-repeat="(person, result) in results">
+                <p>{{person}}
+                    <span class="badge">{{result.days}} days</span>
+                    </h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Project</th>
+                                <th>Type</th>
+                                <th>Time (in days)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="info in result.info | orderBy:'date'">
+                                <td>{{info.date}}</td>
+                                <td>{{info.ref}}</td>
+                                <td>{{info.type}}</td>
+                                <td>{{info.time}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- scripts vendors -->
+    <script src="vendors/jquery/dist/jquery.min.js"></script>
+    <script src="vendors/angular/angular.min.js"></script>
+    <script src="vendors/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="vendors/angular-base64/angular-base64.min.js"></script>
+    <script src="vendors/select2/select2.min.js"></script>
+    <script src="vendors/angular-ui-select2/src/select2.js"></script>
+
+
+    <!-- scripts angular -->
+    <script src="app.js"></script>
+    <script src="constants/Config.js"></script>
+    <script src="constants/Credentials.js"></script>
+    <script src="services/SearchSrv.js"></script>
+    <script src="controllers/controller.js"></script>
+
+</body>
+
+</html>

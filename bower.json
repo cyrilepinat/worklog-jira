@@ -1,0 +1,16 @@
+{
+    "name": "worklog-jira",
+    "version": "0.0.1",
+    "authors": [
+        "Cyril Epinat - epicyr@gmail.com"
+      ],
+    "dependencies": {
+        "jquery": "1.*.*",
+        "angular": "1.2.*",
+        "angular-bootstrap": "latest",
+        "bootstrap-css-only": "latest",
+        "angular-base64": "latest",
+        "angular-ui-select2": "latest",
+        "font-awesome-bower" : "latest"
+    }
+}
