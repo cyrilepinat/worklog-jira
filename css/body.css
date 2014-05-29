@@ -1,0 +1,13 @@
+#searchForm{
+    margin-bottom:20px;
+}
+
+#endDate, #startDate{
+    margin-top:10px;
+}
+#endDate input, #startDate input{
+    width:auto;
+}
+#endDate span, #startDate span{
+    display:inline;
+}

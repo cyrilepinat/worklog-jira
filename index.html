@@ -1,8 +1,9 @@
 <!doctype html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Worklog - Jira</title>
     <link rel="stylesheet" href="css/body.css">
     <link rel="stylesheet" href="vendors/bootstrap-css-only/css/bootstrap.min.css">
@@ -13,12 +14,14 @@
 
 <body ng-app="worklogApp">
 
-    <div id="wrapper" ng-controller="MainCtrl">
+    <div id="wrapper" class="container" ng-controller="MainCtrl">
         <h1>Worklog for Jira</h1>
-        <p>Application permettant de vérifier les temps passés</p>
+        <p class="text-muted">This web app allows you to check worklogs by users for a given date period.</p>
 
-        <form class="form-inline" role="form" ng-submit="search()">
-
+        <form id="searchForm" class="form-inline" role="form" ng-submit="search()">
+            <div class="form-group">
+                Search:
+            </div>
             <div class="form-group">
                 <label class="sr-only" for="selectUser">Start date</label>
                 <select ui-select2="selectUserConfig" ng-model="selectedUser" ng-change="valueChanged(selectedUser)">
@@ -28,13 +31,28 @@
             </div>
             <div class="form-group">
                 <label class="sr-only" for="startDate">Start date</label>
-                <input type="text" class="form-control" id="startDate" ng-model="startDate" placeholder="Enter a start date">
+                <p class="input-group" id="startDate">
+                    <input type="text" class="form-control" placeholder="Enter a start date" datepicker-popup="{{format}}" ng-model="startDate" is-open="openedStart" min-date="'2000-01-01'" max-date="maxAvailableDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" show-button-bar="false" close-text="Close" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open('start', $event)">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                    </span>
+                </p>
             </div>
             <div class="form-group">
                 <label class="sr-only" for="endDate">End date</label>
-                <input type="text" class="form-control" id="endDate" ng-model="endDate" placeholder="Enter a end date">
+                <p class="input-group" id="endDate">
+                    <input type="text" class="form-control" placeholder="Enter a end date" datepicker-popup="{{format}}" ng-model="endDate" is-open="openedEnd" min-date="'2000-01-01'" max-date="maxAvailableDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" show-button-bar="false" close-text="Close" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open('end', $event)">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                    </span>
+                </p>
             </div>
-            <button type="submit" class="btn btn-primary">Search</button><i ng-if="!finished" class="fa fa-spinner fa-spin fa-lg fa-fw"></i>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <i ng-if="!finished" class="fa fa-spinner fa-spin fa-lg fa-fw"></i>
         </form>
 
         <div id="results-box">

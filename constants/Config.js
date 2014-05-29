@@ -7,5 +7,9 @@ worklogApp.constant("CONFIG", {
     jiraDateFormat : "yyyy-MM-dd'T'HH:mm:ss.SSSz",
     renderedDateFormat : "yyyy-MM-dd",
     assigneeAll : "ALL",
-    projectBugfixingLabel : "Project bugfixing"
+    projectBugfixingLabel : "Project bugfixing",
+    issueTypes : {
+        CORE : "Core",
+        PROJECT : "Project"
+    }
 });
