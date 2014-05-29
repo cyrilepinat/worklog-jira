@@ -54,6 +54,7 @@
             <button type="submit" class="btn btn-primary">Search</button>
             <i ng-if="!finished" class="fa fa-spinner fa-spin fa-lg fa-fw"></i>
         </form>
+        <alert type="{{alertType}}" ng-if="errorMsg" close="closeAlert()">{{errorMsg}}</alert>
 
         <div id="results-box">
 
@@ -98,6 +99,7 @@
     <script src="app.js"></script>
     <script src="constants/Config.js"></script>
     <script src="constants/Credentials.js"></script>
+    <!--<script src="constants/Credentials-dev.js"></script>-->
     <script src="services/SearchSrv.js"></script>
     <script src="controllers/controller.js"></script>
 

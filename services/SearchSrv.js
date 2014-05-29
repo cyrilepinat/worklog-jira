@@ -55,7 +55,6 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                 }); // forEach worklogs
             }); // forEach issues
 
-            $log.debug($$results);
             //notify the end of process
             $$running = false;
             $$deferred.resolve($$results);
@@ -95,7 +94,8 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                 }).then(function (response) {
                     parseData(response.data);
                 }, function(response){
-                    $$deferred.reject("error");
+                    $$running = false;
+                    $$deferred.reject(response);
                 });
 
                 return $$deferred.promise;

@@ -38,7 +38,6 @@ worklogApp.controller('MainCtrl', ['$scope', '$http', '$filter', '$log', 'CONFIG
             }
         };
         $scope.$watch('selectedUser', function (val) {
-            $log.debug(val);
             SearchSrv.filter(val);
         })
 
@@ -48,11 +47,22 @@ worklogApp.controller('MainCtrl', ['$scope', '$http', '$filter', '$log', 'CONFIG
             $scope.finished = false;
             SearchSrv.searchAll(SearchSrv.getDateAsString($scope.startDate), SearchSrv.getDateAsString($scope.endDate)).then(function (data) {
                 $scope.results = data;
-                $log.debug("results", $scope.results);
+                $log.debug(data);
+                if (Object.keys($scope.results).length==0){
+                    $scope.alertType = "success";
+                    $scope.errorMsg = "No results.";
+                }
                 $scope.finished = true;
             }, function (data) {
-                $log.debug("error");
+                $scope.finished = true;
+                $scope.alertType = "danger";
+                $scope.errorMsg = "Error: " + data.status + " - " + data.statusText;
             });
+        };
+
+        //errors
+        $scope.closeAlert = function () {
+            delete $scope.errorMsg;
         };
 
 }]);
