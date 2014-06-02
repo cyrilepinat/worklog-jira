@@ -43,12 +43,12 @@ worklogApp.controller('MainCtrl', ['$scope', '$http', '$filter', '$log', 'CONFIG
 
         //submit form
         $scope.search = function () {
+            $scope.closeAlert();
             $scope.results = {};
             $scope.finished = false;
             SearchSrv.searchAll(SearchSrv.getDateAsString($scope.startDate), SearchSrv.getDateAsString($scope.endDate)).then(function (data) {
                 $scope.results = data;
-                $log.debug(data);
-                if (Object.keys($scope.results).length==0){
+                if (Object.keys($scope.results).length == 0) {
                     $scope.alertType = "success";
                     $scope.errorMsg = "No results.";
                 }

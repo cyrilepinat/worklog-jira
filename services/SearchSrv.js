@@ -6,7 +6,7 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
         var $$results, $$startDate, $$endDate, $$filter, $$running, $$deferred;
 
         var parseData = function (data) {
-            $$results= {};
+            $$results = {};
             var issues = data.issues;
             angular.forEach(issues, function (issue, i) {
                 var versions = issue.fields.fixVersions;
@@ -16,6 +16,8 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                     if (version &&
                         (version.toLowerCase().indexOf("scrum") > -1 || version.toLowerCase().indexOf("prod") > -1)) {
                         issueType = CONFIG.issueTypes.PROJECT;
+                    } else if (version && version.toLowerCase().indexOf("bugfixing") > -1) {
+                        issueType = CONFIG.issueTypes.BUGFIXING;
                     }
                 }
                 var worklogs = issue.fields.worklog.worklogs;
@@ -32,10 +34,22 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                             var result = $$results[author];
                             if (!result) {
                                 result = {
-                                    days: 0
+                                    days: {}
                                 };
+                                result['days']['Total'] = 0;
+                                result['days'][CONFIG.issueTypes.CORE] = 0;
+                                result['days'][CONFIG.issueTypes.PROJECT] = 0;
+                                result['days'][CONFIG.issueTypes.BUGFIXING] = 0;
                             }
-                            result['days'] += worklogInDay;
+                            result['days']['Total'] += worklogInDay;
+                            if (issueType === CONFIG.issueTypes.CORE) {
+                                result['days'][CONFIG.issueTypes.CORE] += worklogInDay;
+                            } else if (issueType === CONFIG.issueTypes.PROJECT) {
+                                result['days'][CONFIG.issueTypes.PROJECT] += worklogInDay;
+                            } else if (issueType === CONFIG.issueTypes.BUGFIXING) {
+                                result['days'][CONFIG.issueTypes.BUGFIXING] += worklogInDay;
+                            }
+
                             var worklogsInfoArray = result['info'];
                             if (!worklogsInfoArray) {
                                 worklogsInfoArray = [];
@@ -81,7 +95,14 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                     startAt: "0",
                     maxResults: "5000",
                     fields: "fixVersions,worklog"
-                }
+                };
+
+                /*var params = {
+    jql: "(summary!~'" + CONFIG.sl3Label + "' OR summary!~'" + CONFIG.projectBugfixingLabel + "') AND ((created >= " + startDate + " AND created <= " + endDate + ") OR (updated >= " + startDate + " AND updated <= " + endDate + "))",
+    startAt: 0,
+    maxResults: 5000,
+    fields: "fixVersions,worklog"
+};*/
 
                 $$deferred = $q.defer();
 
@@ -93,7 +114,7 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                     }
                 }).then(function (response) {
                     parseData(response.data);
-                }, function(response){
+                }, function (response) {
                     $$running = false;
                     $$deferred.reject(response);
                 });
@@ -108,7 +129,7 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
             }
             return $$filter;
         }
-        
+
         this.getDateAsString = function (date) {
             return $filter('date')(date, CONFIG.renderedDateFormat);
         };

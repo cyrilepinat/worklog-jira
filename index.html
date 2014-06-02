@@ -60,13 +60,14 @@
 
             <div class="jumbotron" ng-repeat="(person, result) in results">
                 <p>{{person}}
-                    <span class="badge">{{result.days}} days</span>
+                    <span class="label pull-right" ng-class="{'label-warning' : $last, 'label-default':!$last}" ng-repeat="(key,val) in result.days">{{key}}: {{val}}</span>
+                    <span class="worklog-label pull-right">Worklog (in days)</span>
                     </h3>
                     <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Project</th>
+                                <th>Reference</th>
                                 <th>Type</th>
                                 <th>Time (in days)</th>
                             </tr>

@@ -1,13 +1,25 @@
-#searchForm{
-    margin-bottom:20px;
+#searchForm {
+    margin-bottom: 20px;
 }
-
-#endDate, #startDate{
-    margin-top:10px;
+#endDate,
+#startDate {
+    margin-top: 10px;
 }
-#endDate input, #startDate input{
-    width:auto;
+#endDate input,
+#startDate input {
+    width: auto;
 }
-#endDate span, #startDate span{
-    display:inline;
+#endDate span,
+#startDate span {
+    display: inline;
+}
+#results-box .label {
+    margin-right: 12px;
+    padding: 7px 11px;
+}
+#results-box .worklog-label {
+    font-size: 70%;
+    color: #888;
+    margin: 5px 15px 0 0;
+    font-style: italic;
 }
