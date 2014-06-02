@@ -91,18 +91,11 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                 $$endDate = new Date(endDate + CONFIG.endDateSuffix);
 
                 var params = {
-                    jql: "((project=NCT AND summary!~'Project bugfixing') OR (project IN (CSTDMCMTNS,PRDTARGETME,CSTDMCOMEA,CSTDMCMED) AND ((created >= " + startDate + " AND created <= " + endDate + ") OR (updated >= " + startDate + " AND updated <= " + endDate + "))))",
-                    startAt: "0",
-                    maxResults: "5000",
+                    jql: "(summary!~'" + CONFIG.sl3Label + "' OR summary!~'" + CONFIG.projectBugfixingLabel + "') AND ((created >= " + startDate + " AND created <= " + endDate + ") OR (updated >= " + startDate + " AND updated <= " + endDate + "))",
+                    startAt: 0,
+                    maxResults: 5000,
                     fields: "fixVersions,worklog"
                 };
-
-                /*var params = {
-    jql: "(summary!~'" + CONFIG.sl3Label + "' OR summary!~'" + CONFIG.projectBugfixingLabel + "') AND ((created >= " + startDate + " AND created <= " + endDate + ") OR (updated >= " + startDate + " AND updated <= " + endDate + "))",
-    startAt: 0,
-    maxResults: 5000,
-    fields: "fixVersions,worklog"
-};*/
 
                 $$deferred = $q.defer();
 
