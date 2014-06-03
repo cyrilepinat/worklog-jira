@@ -81,22 +81,22 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                 $$running = true;
                 if (!startDate) {
                     startDate = moment().format(CONFIG.renderedMomentFormat);
-                } else {
-                    //hack: substract a month to retrieve more issues, we will filter in parse process
-                    startDate = moment(startDate, CONFIG.renderedMomentFormat).subtract('M',1).format(CONFIG.renderedMomentFormat);
                 }
+                //hack: substract a month to retrieve more issues, we will filter in parse process
+                var startDateExtend = moment(startDate, CONFIG.renderedMomentFormat).subtract('M',1).format(CONFIG.renderedMomentFormat);
+                
                 $$startDate = new Date(startDate + CONFIG.startDateSuffix);
 
                 if (!endDate) {
                     endDate = moment().format(CONFIG.renderedMomentFormat);
-                } else {
-                    //hack: add a month to retrieve more issues, we will filter in parse process
-                    endDate = moment(endDate, CONFIG.renderedMomentFormat).add('M', 1).format(CONFIG.renderedMomentFormat); 
                 }
+                //hack: add a month to retrieve more issues, we will filter in parse process
+                var endDateExtend = moment(endDate, CONFIG.renderedMomentFormat).add('M', 1).format(CONFIG.renderedMomentFormat); 
+                
                 $$endDate = new Date(endDate + CONFIG.endDateSuffix);
 
                 var params = {
-                    jql: "(summary!~'" + CONFIG.sl3Label + "' AND summary!~'" + CONFIG.projectBugfixingLabel + "') AND ((created >= " + startDate + " AND created <= " + endDate + ") OR (updated >= " + startDate + " AND updated <= " + endDate + "))",
+                    jql: "(summary!~'" + CONFIG.sl3Label + "' AND summary!~'" + CONFIG.projectBugfixingLabel + "') AND ((created >= " + startDateExtend + " AND created <= " + endDateExtend + ") OR (updated >= " + startDateExtend + " AND updated <= " + endDateExtend + "))",
                     startAt: 0,
                     maxResults: 5000,
                     fields: "fixVersions,worklog"
