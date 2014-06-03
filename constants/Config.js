@@ -6,6 +6,7 @@ worklogApp.constant("CONFIG", {
     endDateSuffix: "T23:59:59.999+0200",
     jiraDateFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSz",
     renderedDateFormat: "yyyy-MM-dd",
+    renderedMomentFormat:"YYYY-MM-DD",
     assigneeAll: "ALL",
     projectBugfixingLabel: "Project bugfixing",
     sl3Label: "SL3",

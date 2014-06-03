@@ -11,6 +11,7 @@
         "bootstrap-css-only": "latest",
         "angular-base64": "latest",
         "angular-ui-select2": "latest",
-        "font-awesome-bower" : "latest"
+        "font-awesome-bower" : "latest",
+        "moment" : "latest"
     }
 }

@@ -24,6 +24,7 @@ worklogApp.controller('MainCtrl', ['$scope', '$http', '$filter', '$log', 'CONFIG
         //select2
         $http.get("data/users.json").success(function (data) {
             $scope.users = data;
+            SearchSrv.usersFocusList(data);
         })
         $scope.selectUserConfig = {
             width: '300px',

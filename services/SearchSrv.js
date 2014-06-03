@@ -3,7 +3,7 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
 
         /** private members and methods */
         var $$basicAuth = "Basic " + $base64.encode(CREDENTIALS.username + ':' + CREDENTIALS.password);
-        var $$results, $$startDate, $$endDate, $$filter, $$running, $$deferred;
+        var $$results, $$startDate, $$endDate, $$filter, $$running, $$deferred, $$usersFocusList;
 
         var parseData = function (data) {
             $$results = {};
@@ -23,7 +23,7 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                 var worklogs = issue.fields.worklog.worklogs;
                 angular.forEach(worklogs, function (worklog, i) {
                     var author = worklog.author.displayName.trim();
-                    if ($$filter == CONFIG.assigneeAll || $$filter == author) {
+                    if (author in $$usersFocusList && ($$filter == CONFIG.assigneeAll || $$filter == author)) {
                         var worklogInDay = worklog.timeSpentSeconds / 28800;
                         var worklogDate = new Date(worklog.started);
 
@@ -80,18 +80,27 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
             if (!$$running) {
                 $$running = true;
                 if (!startDate) {
-                    startDate = this.getDateAsString(new Date());
-                    $$startDate = new Date(startDate + CONFIG.startDateSuffix);
+                    startDate = moment().format(CONFIG.renderedMomentFormat);
+                } else {
+                    //hack: substract a month to retrieve more issues, we will filter in parse process
+                    $log.debug("else start ", startDate);
+                    startDate = moment(startDate, CONFIG.renderedMomentFormat).subtract('M',1).format(CONFIG.renderedMomentFormat);
                 }
+                $log.debug(startDate);
                 $$startDate = new Date(startDate + CONFIG.startDateSuffix);
 
                 if (!endDate) {
-                    endDate = this.getDateAsString(new Date());
+                    endDate = moment().format(CONFIG.renderedMomentFormat);
+                } else {
+                    //hack: add a month to retrieve more issues, we will filter in parse process
+                    $log.debug("else end ", endDate);
+                    endDate = moment(endDate, CONFIG.renderedMomentFormat).add('M', 1).format(CONFIG.renderedMomentFormat); 
                 }
+                $log.debug(endDate);
                 $$endDate = new Date(endDate + CONFIG.endDateSuffix);
 
                 var params = {
-                    jql: "(summary!~'" + CONFIG.sl3Label + "' OR summary!~'" + CONFIG.projectBugfixingLabel + "') AND ((created >= " + startDate + " AND created <= " + endDate + ") OR (updated >= " + startDate + " AND updated <= " + endDate + "))",
+                    jql: "(summary!~'" + CONFIG.sl3Label + "' AND summary!~'" + CONFIG.projectBugfixingLabel + "') AND ((created >= " + startDate + " AND created <= " + endDate + ") OR (updated >= " + startDate + " AND updated <= " + endDate + "))",
                     startAt: 0,
                     maxResults: 5000,
                     fields: "fixVersions,worklog"
@@ -121,7 +130,14 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                 $$filter = filter;
             }
             return $$filter;
-        }
+        };
+        
+        this.usersFocusList = function(list){
+            if (list) {
+                $$usersFocusList = list;
+            }
+            return $$usersFocusList;
+        };
 
         this.getDateAsString = function (date) {
             return $filter('date')(date, CONFIG.renderedDateFormat);
