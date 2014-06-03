@@ -23,7 +23,7 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                 var worklogs = issue.fields.worklog.worklogs;
                 angular.forEach(worklogs, function (worklog, i) {
                     var author = worklog.author.displayName.trim();
-                    if (author in $$usersFocusList && ($$filter == CONFIG.assigneeAll || $$filter == author)) {
+                    if ($$usersFocusList.indexOf(author) > -1 && ($$filter == CONFIG.assigneeAll || $$filter == author)) {
                         var worklogInDay = worklog.timeSpentSeconds / 28800;
                         var worklogDate = new Date(worklog.started);
 
