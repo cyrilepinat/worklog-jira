@@ -83,20 +83,16 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                     startDate = moment().format(CONFIG.renderedMomentFormat);
                 } else {
                     //hack: substract a month to retrieve more issues, we will filter in parse process
-                    $log.debug("else start ", startDate);
                     startDate = moment(startDate, CONFIG.renderedMomentFormat).subtract('M',1).format(CONFIG.renderedMomentFormat);
                 }
-                $log.debug(startDate);
                 $$startDate = new Date(startDate + CONFIG.startDateSuffix);
 
                 if (!endDate) {
                     endDate = moment().format(CONFIG.renderedMomentFormat);
                 } else {
                     //hack: add a month to retrieve more issues, we will filter in parse process
-                    $log.debug("else end ", endDate);
                     endDate = moment(endDate, CONFIG.renderedMomentFormat).add('M', 1).format(CONFIG.renderedMomentFormat); 
                 }
-                $log.debug(endDate);
                 $$endDate = new Date(endDate + CONFIG.endDateSuffix);
 
                 var params = {
