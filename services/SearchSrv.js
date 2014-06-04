@@ -83,7 +83,7 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                     startDate = moment().format(CONFIG.renderedMomentFormat);
                 }
                 //hack: substract a month to retrieve more issues, we will filter in parse process
-                var startDateExtend = moment(startDate, CONFIG.renderedMomentFormat).subtract('M',1).format(CONFIG.renderedMomentFormat);
+                var startDateExtend = moment(startDate, CONFIG.renderedMomentFormat).subtract('d',15).format(CONFIG.renderedMomentFormat);
                 
                 $$startDate = new Date(startDate + CONFIG.startDateSuffix);
 
@@ -91,12 +91,12 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                     endDate = moment().format(CONFIG.renderedMomentFormat);
                 }
                 //hack: add a month to retrieve more issues, we will filter in parse process
-                var endDateExtend = moment(endDate, CONFIG.renderedMomentFormat).add('M', 1).format(CONFIG.renderedMomentFormat); 
+                var endDateExtend = moment(endDate, CONFIG.renderedMomentFormat).add('d',15).format(CONFIG.renderedMomentFormat); 
                 
                 $$endDate = new Date(endDate + CONFIG.endDateSuffix);
 
                 var params = {
-                    jql: "(summary!~'" + CONFIG.sl3Label + "' AND summary!~'" + CONFIG.projectBugfixingLabel + "') AND ((created >= " + startDateExtend + " AND created <= " + endDateExtend + ") OR (updated >= " + startDateExtend + " AND updated <= " + endDateExtend + "))",
+                    jql: "((category NOT IN('Hosting','Integration Projects') OR category is EMPTY) AND project not in('CSTDMTOTWODEV','CSTVCDMC4','HSDHUSDRB','CSTUSSDTLVPC','PRDDMC42','CSTVPCDMCMIGR','PRDSMSGIFT') AND summary!~'" + CONFIG.sl3Label + "' AND summary!~'" + CONFIG.projectBugfixingLabel + "') AND ((created >= " + startDateExtend + " AND created <= " + endDateExtend + ") OR (updated >= " + startDateExtend + " AND updated <= " + endDateExtend + "))",
                     startAt: 0,
                     maxResults: 5000,
                     fields: "fixVersions,worklog"
