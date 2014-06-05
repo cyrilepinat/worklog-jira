@@ -8,13 +8,6 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
         var parseData = function (data) {
             $$results = {};
 
-/*			
-			var totalDays = {'Total': 0,
-							CONFIG.issueTypes.CORE: 0,
-							CONFIG.issueTypes.PROJECT: 0,
-							CONFIG.issueTypes.BUGFIXING: 0
-                            };
-*/							
 			var totalDays = {'Total': 0,
 							'Core': 0,
 							'Project': 0,
