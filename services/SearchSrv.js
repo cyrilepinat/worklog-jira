@@ -7,6 +7,13 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
 
         var parseData = function (data) {
             $$results = {};
+
+			var totalDays = {'Total': 0,
+							'Core': 0,
+							'Project': 0,
+							'Bugfixing': 0
+                            };
+
             var issues = data.issues;
             angular.forEach(issues, function (issue, i) {
                 var versions = issue.fields.fixVersions;
@@ -42,12 +49,16 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                                 result['days'][CONFIG.issueTypes.BUGFIXING] = 0;
                             }
                             result['days']['Total'] += worklogInDay;
-                            if (issueType === CONFIG.issueTypes.CORE) {
+                            totalDays['Total'] += worklogInDay;
+							if (issueType === CONFIG.issueTypes.CORE) {
                                 result['days'][CONFIG.issueTypes.CORE] += worklogInDay;
+								totalDays[CONFIG.issueTypes.CORE] += worklogInDay;
                             } else if (issueType === CONFIG.issueTypes.PROJECT) {
                                 result['days'][CONFIG.issueTypes.PROJECT] += worklogInDay;
+								totalDays[CONFIG.issueTypes.PROJECT] += worklogInDay;
                             } else if (issueType === CONFIG.issueTypes.BUGFIXING) {
                                 result['days'][CONFIG.issueTypes.BUGFIXING] += worklogInDay;
+								totalDays[CONFIG.issueTypes.BUGFIXING] += worklogInDay;
                             }
 
                             var worklogsInfoArray = result['info'];
@@ -69,6 +80,11 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                 }); // forEach worklogs
             }); // forEach issues
 
+			$$results['Total'] = {
+				days : totalDays
+			};
+
+			
             //notify the end of process
             $$running = false;
             $$deferred.resolve($$results);
