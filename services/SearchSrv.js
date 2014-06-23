@@ -8,11 +8,12 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
         var parseData = function (data) {
             $$results = {};
 
-			var totalDays = {'Total': 0,
-							'Core': 0,
-							'Project': 0,
-							'Bugfixing': 0
-                            };
+            var totalDays = {
+                'Total': 0,
+                'Core': 0,
+                'Project': 0,
+                'Bugfixing': 0
+            };
 
             var issues = data.issues;
             angular.forEach(issues, function (issue, i) {
@@ -50,15 +51,15 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                             }
                             result['days']['Total'] += worklogInDay;
                             totalDays['Total'] += worklogInDay;
-							if (issueType === CONFIG.issueTypes.CORE) {
+                            if (issueType === CONFIG.issueTypes.CORE) {
                                 result['days'][CONFIG.issueTypes.CORE] += worklogInDay;
-								totalDays[CONFIG.issueTypes.CORE] += worklogInDay;
+                                totalDays[CONFIG.issueTypes.CORE] += worklogInDay;
                             } else if (issueType === CONFIG.issueTypes.PROJECT) {
                                 result['days'][CONFIG.issueTypes.PROJECT] += worklogInDay;
-								totalDays[CONFIG.issueTypes.PROJECT] += worklogInDay;
+                                totalDays[CONFIG.issueTypes.PROJECT] += worklogInDay;
                             } else if (issueType === CONFIG.issueTypes.BUGFIXING) {
                                 result['days'][CONFIG.issueTypes.BUGFIXING] += worklogInDay;
-								totalDays[CONFIG.issueTypes.BUGFIXING] += worklogInDay;
+                                totalDays[CONFIG.issueTypes.BUGFIXING] += worklogInDay;
                             }
 
                             var worklogsInfoArray = result['info'];
@@ -80,11 +81,11 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                 }); // forEach worklogs
             }); // forEach issues
 
-			$$results['Total'] = {
-				days : totalDays
-			};
+            $$results['Total'] = {
+                days: totalDays
+            };
 
-			
+
             //notify the end of process
             $$running = false;
             $$deferred.resolve($$results);
@@ -99,29 +100,27 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                     startDate = moment().format(CONFIG.renderedMomentFormat);
                 }
                 //hack: substract a month to retrieve more issues, we will filter in parse process
-                var startDateExtend = moment(startDate, CONFIG.renderedMomentFormat).subtract('d',15).format(CONFIG.renderedMomentFormat);
-                
+                var startDateExtend = moment(startDate, CONFIG.renderedMomentFormat).subtract('d', 15).format(CONFIG.renderedMomentFormat);
+
                 $$startDate = new Date(startDate + CONFIG.startDateSuffix);
 
                 if (!endDate) {
                     endDate = moment().format(CONFIG.renderedMomentFormat);
                 }
                 //hack: add a month to retrieve more issues, we will filter in parse process
-                var endDateExtend = moment(endDate, CONFIG.renderedMomentFormat).add('d',15).format(CONFIG.renderedMomentFormat); 
-                
+                var endDateExtend = moment(endDate, CONFIG.renderedMomentFormat).add('d', 15).format(CONFIG.renderedMomentFormat);
+
                 $$endDate = new Date(endDate + CONFIG.endDateSuffix);
 
                 var params = {
-                    jql: "((category NOT IN('Hosting','Integration Projects') OR category is EMPTY) AND project not in('CSTDMTOTWODEV','CSTVCDMC4','HSDHUSDRB','CSTUSSDTLVPC','PRDDMC42','CSTVPCDMCMIGR','PRDSMSGIFT') AND summary!~'" + CONFIG.sl3Label + "' AND summary!~'" + CONFIG.projectBugfixingLabel + "') AND ((created >= " + startDateExtend + " AND created <= " + endDateExtend + ") OR (updated >= " + startDateExtend + " AND updated <= " + endDateExtend + "))",
-                    startAt: 0,
-                    maxResults: 5000,
-                    fields: "fixVersions,worklog"
+                    jql: "((category NOT IN('Hosting','Integration Projects') OR category is EMPTY) AND project not in('CSTDMTOTWODEV','CSTVCDMC4','HSDHUSDRB','CSTUSSDTLVPC','PRDDMC42','CSTVPCDMCMIGR','PRDSMSGIFT') AND summary!~'" + CONFIG.sl3Label + "' AND summary!~'" + CONFIG.projectBugfixingLabel + "') AND ((created >= " + startDateExtend + " AND created <= " + endDateExtend + ") OR (updated >= " + startDateExtend + " AND updated <= " + endDateExtend + "))"
                 };
 
                 $$deferred = $q.defer();
 
                 // do request and return promise
-                $http.get(CONFIG.jiraUrl, {
+                var url = "http://" + CONFIG.proxy.host + ":" + CONFIG.proxy.port + CONFIG.proxy.path;
+                $http.get(url, {
                     params: params,
                     headers: {
                         "Authorization": $$basicAuth
@@ -143,8 +142,8 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
             }
             return $$filter;
         };
-        
-        this.usersFocusList = function(list){
+
+        this.usersFocusList = function (list) {
             if (list) {
                 $$usersFocusList = list;
             }

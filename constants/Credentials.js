@@ -1,4 +1,4 @@
 worklogApp.constant("CREDENTIALS", {
-    username : "<user>",
-    password : "<pwd>"
+    username: "<user>",
+    password: "<pwd>"
 });
