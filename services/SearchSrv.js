@@ -1,19 +1,17 @@
-worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'CREDENTIALS', 'CONFIG',
-    function ($http, $log, $filter, $base64, $q, CREDENTIALS, CONFIG) {
+worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$q', 'CONFIG',
+    function ($http, $log, $filter, $q, CONFIG) {
 
         /** private members and methods */
-        var $$basicAuth = "Basic " + $base64.encode(CREDENTIALS.username + ':' + CREDENTIALS.password);
         var $$results, $$startDate, $$endDate, $$filter, $$running, $$deferred, $$usersFocusList;
 
         var parseData = function (data) {
             $$results = {};
 
-            var totalDays = {
-                'Total': 0,
-                'Core': 0,
-                'Project': 0,
-                'Bugfixing': 0
-            };
+            var totalDays = {};
+            totalDays['Total'] = 0;
+            totalDays[CONFIG.issueTypes.CORE] = 0;
+            totalDays[CONFIG.issueTypes.PROJECT] = 0;
+            totalDays[CONFIG.issueTypes.BUGFIXING] = 0;
 
             var issues = data.issues;
             angular.forEach(issues, function (issue, i) {
@@ -121,10 +119,7 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$base64', '$q', 'C
                 // do request and return promise
                 var url = "http://" + CONFIG.proxy.host + ":" + CONFIG.proxy.port + CONFIG.proxy.path;
                 $http.get(url, {
-                    params: params,
-                    headers: {
-                        "Authorization": $$basicAuth
-                    }
+                    params: params
                 }).then(function (response) {
                     parseData(response.data);
                 }, function (response) {

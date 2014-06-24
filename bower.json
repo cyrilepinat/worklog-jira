@@ -9,9 +9,8 @@
         "angular": "1.2.*",
         "angular-bootstrap": "latest",
         "bootstrap-css-only": "latest",
-        "angular-base64": "latest",
         "angular-ui-select2": "latest",
-        "font-awesome-bower" : "latest",
-        "moment" : "latest"
+        "font-awesome-bower": "latest",
+        "moment": "latest"
     }
 }

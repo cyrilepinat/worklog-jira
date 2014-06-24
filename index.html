@@ -57,7 +57,7 @@
         <alert type="{{alertType}}" ng-if="errorMsg" close="closeAlert()">{{errorMsg}}</alert>
 
         <div id="results-box">
-			
+
             <div class="jumbotron" ng-repeat="(person, result) in results">
                 <p>{{person}}
                     <span class="label pull-right" ng-class="{'label-warning' : $last, 'label-default':!$last}" ng-repeat="(key,val) in result.days">{{key}}: {{val}}</span>
@@ -91,7 +91,6 @@
     <script src="vendors/jquery/dist/jquery.min.js"></script>
     <script src="vendors/angular/angular.min.js"></script>
     <script src="vendors/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-    <script src="vendors/angular-base64/angular-base64.min.js"></script>
     <script src="vendors/select2/select2.min.js"></script>
     <script src="vendors/angular-ui-select2/src/select2.js"></script>
     <script src="vendors/moment/moment.js"></script>
@@ -100,8 +99,6 @@
     <!-- scripts angular -->
     <script src="app.js"></script>
     <script src="constants/Config.js"></script>
-    <script src="constants/Credentials.js"></script>
-    <!--<script src="constants/Credentials-dev.js"></script>-->
     <script src="services/SearchSrv.js"></script>
     <script src="controllers/controller.js"></script>
 

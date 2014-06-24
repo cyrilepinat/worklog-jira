@@ -1,1 +1,1 @@
-var worklogApp = angular.module('worklogApp', ['base64', 'ui.select2', 'ui.bootstrap']);
+var worklogApp = angular.module('worklogApp', ['ui.select2', 'ui.bootstrap']);
