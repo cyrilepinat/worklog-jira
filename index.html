@@ -60,7 +60,9 @@
 
             <div class="jumbotron" ng-repeat="(person, result) in results">
                 <p>{{person}}
-                    <span class="label pull-right" ng-class="{'label-warning' : $last, 'label-default':!$last}" ng-repeat="(key,val) in result.days">{{key}}: {{val}}</span>
+                    <span ng-repeat="(key,val) in result.days" ng-show="key!='projectsTotal'" class="label pull-right" ng-class="{'label-warning' : key=='Total', 'label-default':!$last}">
+                        {{key}}: {{val}}
+                    </span>
                     <span class="worklog-label pull-right">Worklog (in days)</span>
                     </h3>
                     <table ng-show="person!='Total'" class="table table-striped">
@@ -75,12 +77,18 @@
                         <tbody>
                             <tr ng-repeat="info in result.info | orderBy:'date'">
                                 <td>{{info.date}}</td>
-                                <td>{{info.ref}}</td>
+                                <td>
+                                    <a href="{{info.url}}">{{info.ref}}</a>
+                                </td>
                                 <td>{{info.type}}</td>
                                 <td>{{info.time}}</td>
                             </tr>
                         </tbody>
                     </table>
+                    <span class="worklog-label project-label">By projects: </span>
+                    <span ng-repeat="(key,val) in result.days.projectsTotal" class="label label-default project-label">
+                        {{key}}: {{val}} 
+                    </span>
             </div>
 
         </div>

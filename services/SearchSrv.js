@@ -12,6 +12,7 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$q', 'CONFIG',
             totalDays[CONFIG.issueTypes.CORE] = 0;
             totalDays[CONFIG.issueTypes.PROJECT] = 0;
             totalDays[CONFIG.issueTypes.BUGFIXING] = 0;
+            totalDays['projectsTotal'] = {};
 
             var issues = data.issues;
             angular.forEach(issues, function (issue, i) {
@@ -46,9 +47,25 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$q', 'CONFIG',
                                 result['days'][CONFIG.issueTypes.CORE] = 0;
                                 result['days'][CONFIG.issueTypes.PROJECT] = 0;
                                 result['days'][CONFIG.issueTypes.BUGFIXING] = 0;
+                                result['days']['projectsTotal'] = {};
                             }
+                            //compute time by project ref
+                            var project = result['days']['projectsTotal'][issueRef.split('-')[0]];
+                            if (angular.isUndefined(project)) {
+                                result['days']['projectsTotal'][issueRef.split('-')[0]] = 0;
+                            }
+                            var totalProject = totalDays['projectsTotal'][issueRef.split('-')[0]];
+                            if (angular.isUndefined(totalProject)) {
+                                totalDays['projectsTotal'][issueRef.split('-')[0]] = 0;
+                            }
+                            result['days']['projectsTotal'][issueRef.split('-')[0]] += worklogInDay;
+                            totalDays['projectsTotal'][issueRef.split('-')[0]] += worklogInDay;
+
+                            //compute total time
                             result['days']['Total'] += worklogInDay;
                             totalDays['Total'] += worklogInDay;
+
+                            //compute time by project type
                             if (issueType === CONFIG.issueTypes.CORE) {
                                 result['days'][CONFIG.issueTypes.CORE] += worklogInDay;
                                 totalDays[CONFIG.issueTypes.CORE] += worklogInDay;
@@ -68,7 +85,8 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$q', 'CONFIG',
                                 date: $filter('date')(worklogDate, CONFIG.renderedDateFormat),
                                 ref: issueRef,
                                 type: issueType,
-                                time: worklogInDay
+                                time: worklogInDay,
+                                url: CONFIG.issueBaseUrl + issueRef
                             });
                             $$results[author] = {
                                 days: result['days'],
@@ -82,7 +100,6 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$q', 'CONFIG',
             $$results['Total'] = {
                 days: totalDays
             };
-
 
             //notify the end of process
             $$running = false;

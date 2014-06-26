@@ -12,6 +12,7 @@ worklogApp.constant("CONFIG", {
     assigneeAll: "ALL",
     projectBugfixingLabel: "Project bugfixing",
     sl3Label: "SL3",
+    issueBaseUrl: "https://issuetracker.sicap.com/jira/browse/",
     issueTypes: {
         CORE: "Core",
         PROJECT: "Project",
