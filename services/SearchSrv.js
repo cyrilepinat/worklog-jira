@@ -39,7 +39,7 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$q', 'CONFIG',
 
                             //build results
                             var result = $$results[author];
-                            if (!result) {
+                            if (angular.isUndefined(result)) {
                                 result = {
                                     days: {}
                                 };
@@ -49,17 +49,28 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$q', 'CONFIG',
                                 result['days'][CONFIG.issueTypes.BUGFIXING] = 0;
                                 result['days']['projectsTotal'] = {};
                             }
-                            //compute time by project ref
-                            var project = result['days']['projectsTotal'][issueRef.split('-')[0]];
-                            if (angular.isUndefined(project)) {
-                                result['days']['projectsTotal'][issueRef.split('-')[0]] = 0;
+
+                            //compute time by project ref if type is not CORE
+                            if (issueType !== CONFIG.issueTypes.CORE) {
+                                var project = result['days']['projectsTotal'][issueRef.split('-')[0]];
+                                if (angular.isUndefined(project)) {
+                                    result['days']['projectsTotal'][issueRef.split('-')[0]] = [0, 0];
+                                }
+                                var totalProject = totalDays['projectsTotal'][issueRef.split('-')[0]];
+                                if (angular.isUndefined(totalProject)) {
+                                    totalDays['projectsTotal'][issueRef.split('-')[0]] = [0, 0];
+                                }
+                                //compute time for type PROJECT
+                                if (issueType === CONFIG.issueTypes.PROJECT) {
+                                    result['days']['projectsTotal'][issueRef.split('-')[0]][0] += worklogInDay;
+                                    totalDays['projectsTotal'][issueRef.split('-')[0]][0] += worklogInDay;
+                                }
+                                //compute time for type BUGFIXING
+                                else if (issueType === CONFIG.issueTypes.BUGFIXING) {
+                                    result['days']['projectsTotal'][issueRef.split('-')[0]][1] += worklogInDay;
+                                    totalDays['projectsTotal'][issueRef.split('-')[0]][1] += worklogInDay;
+                                }
                             }
-                            var totalProject = totalDays['projectsTotal'][issueRef.split('-')[0]];
-                            if (angular.isUndefined(totalProject)) {
-                                totalDays['projectsTotal'][issueRef.split('-')[0]] = 0;
-                            }
-                            result['days']['projectsTotal'][issueRef.split('-')[0]] += worklogInDay;
-                            totalDays['projectsTotal'][issueRef.split('-')[0]] += worklogInDay;
 
                             //compute total time
                             result['days']['Total'] += worklogInDay;

@@ -85,9 +85,9 @@
                             </tr>
                         </tbody>
                     </table>
-                    <span class="worklog-label project-label">By projects: </span>
+                    <span class="worklog-label project-label">By projects: (project/bugfixing) </span>
                     <span ng-repeat="(key,val) in result.days.projectsTotal" class="label label-default project-label">
-                        {{key}}: {{val}} 
+                        {{key}}: <span ng-repeat="days in val"><span ng-if="$last"> / </span>{{days}}</span>
                     </span>
             </div>
 
