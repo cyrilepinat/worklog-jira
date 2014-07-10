@@ -67,4 +67,12 @@ worklogApp.controller('MainCtrl', ['$scope', '$http', '$filter', '$log', 'CONFIG
             delete $scope.errorMsg;
         };
 
+        //utils
+        $scope.size = function (obj) {
+            var count = 0;
+            angular.forEach(obj, function () {
+                count++;
+            });
+            return count;
+        };
 }]);

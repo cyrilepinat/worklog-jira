@@ -85,7 +85,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <span class="worklog-label project-label">By projects: (project/bugfixing/undefined) </span>
+                    <span class="worklog-label project-label" ng-show="size(result.days.projectsTotal)>0">By projects: (project/bugfixing/undefined) </span>
                     <span ng-repeat="(key,val) in result.days.projectsTotal" class="label label-default project-label">
                         {{key}}: <span ng-repeat="days in val track by $index"><span ng-if="!$first"> / </span>{{days}}</span>
                     </span>
