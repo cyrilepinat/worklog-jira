@@ -60,7 +60,7 @@
 
             <div class="jumbotron" ng-repeat="(person, result) in results">
                 <p>{{person}}
-                    <span ng-repeat="(key,val) in result.days" ng-show="key!='projectsTotal'" class="label pull-right" ng-class="{'label-warning' : key=='Total', 'label-default':!$last}">
+                    <span ng-repeat="(key,val) in result.days" ng-show="key!=='projectsTotal' && (key!==CONFIG.issueTypes.UNDEFINED.label || val>0)" class="label pull-right" ng-class="{'label-warning' : key==='Total', 'label-danger' : key=== CONFIG.issueTypes.UNDEFINED.label, 'label-default':!$last}">
                         {{key}}: {{val}}
                     </span>
                     <span class="worklog-label pull-right">Worklog (in days)</span>
@@ -75,7 +75,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="info in result.info | orderBy:'date'">
+                            <tr ng-repeat="info in result.info | orderBy:'date'" ng-class="{'danger': info.type === CONFIG.issueTypes.UNDEFINED.label}">
                                 <td>{{info.date}}</td>
                                 <td>
                                     <a href="{{info.url}}">{{info.ref}}</a>
@@ -85,9 +85,9 @@
                             </tr>
                         </tbody>
                     </table>
-                    <span class="worklog-label project-label">By projects: (project/bugfixing) </span>
+                    <span class="worklog-label project-label">By projects: (project/bugfixing/undefined) </span>
                     <span ng-repeat="(key,val) in result.days.projectsTotal" class="label label-default project-label">
-                        {{key}}: <span ng-repeat="days in val"><span ng-if="$last"> / </span>{{days}}</span>
+                        {{key}}: <span ng-repeat="days in val track by $index"><span ng-if="!$first"> / </span>{{days}}</span>
                     </span>
             </div>
 

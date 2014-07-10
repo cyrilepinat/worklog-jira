@@ -3,6 +3,7 @@ worklogApp.controller('MainCtrl', ['$scope', '$http', '$filter', '$log', 'CONFIG
 
         //init
         $scope.finished = true;
+        $scope.CONFIG = CONFIG; //will allow to use CONFIG var inside html template
 
         //datepickers
         $scope.open = function (id, $event) {

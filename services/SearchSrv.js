@@ -9,22 +9,25 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$q', 'CONFIG',
 
             var totalDays = {};
             totalDays['Total'] = 0;
-            totalDays[CONFIG.issueTypes.CORE] = 0;
-            totalDays[CONFIG.issueTypes.PROJECT] = 0;
-            totalDays[CONFIG.issueTypes.BUGFIXING] = 0;
+            totalDays[CONFIG.issueTypes.CORE.label] = 0;
+            totalDays[CONFIG.issueTypes.PROJECT.label] = 0;
+            totalDays[CONFIG.issueTypes.BUGFIXING.label] = 0;
+            totalDays[CONFIG.issueTypes.UNDEFINED.label] = 0;
             totalDays['projectsTotal'] = {};
 
             var issues = data.issues;
             angular.forEach(issues, function (issue, i) {
-                var versions = issue.fields.fixVersions;
-                var issueType = CONFIG.issueTypes.CORE;
-                if (versions && versions.length > 0) {
-                    var version = versions[0].name;
-                    if (version &&
-                        (version.toLowerCase().indexOf("scrum") > -1 || version.toLowerCase().indexOf("prod") > -1)) {
-                        issueType = CONFIG.issueTypes.PROJECT;
-                    } else if (version && version.toLowerCase().indexOf("bugfixing") > -1) {
-                        issueType = CONFIG.issueTypes.BUGFIXING;
+                var lifeCycleStep = issue.fields[CONFIG.jira.lifeCycleStep];
+                var issueRef = issue.key;
+                var issueType = CONFIG.issueTypes.CORE.label;
+                if (angular.isDefined(lifeCycleStep) && lifeCycleStep !== null) {
+                    var lifeCycleStepValue = lifeCycleStep.value;
+                    if (lifeCycleStepValue === CONFIG.issueTypes.PROJECT.code) {
+                        issueType = CONFIG.issueTypes.PROJECT.label;
+                    } else if (lifeCycleStepValue === CONFIG.issueTypes.BUGFIXING.code) {
+                        issueType = CONFIG.issueTypes.BUGFIXING.label;
+                    } else if (lifeCycleStepValue === CONFIG.issueTypes.UNDEFINED.code && CONFIG.jira.coreProjects.indexOf(issueRef.split('-')[0]) === -1) {
+                        issueType = CONFIG.issueTypes.UNDEFINED.label;
                     }
                 }
                 var worklogs = issue.fields.worklog.worklogs;
@@ -35,8 +38,6 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$q', 'CONFIG',
                         var worklogDate = new Date(worklog.started);
 
                         if (worklogDate >= $$startDate && worklogDate <= $$endDate) {
-                            var issueRef = issue.key;
-
                             //build results
                             var result = $$results[author];
                             if (angular.isUndefined(result)) {
@@ -44,31 +45,37 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$q', 'CONFIG',
                                     days: {}
                                 };
                                 result['days']['Total'] = 0;
-                                result['days'][CONFIG.issueTypes.CORE] = 0;
-                                result['days'][CONFIG.issueTypes.PROJECT] = 0;
-                                result['days'][CONFIG.issueTypes.BUGFIXING] = 0;
+                                result['days'][CONFIG.issueTypes.CORE.label] = 0;
+                                result['days'][CONFIG.issueTypes.PROJECT.label] = 0;
+                                result['days'][CONFIG.issueTypes.BUGFIXING.label] = 0;
+                                result['days'][CONFIG.issueTypes.UNDEFINED.label] = 0;
                                 result['days']['projectsTotal'] = {};
                             }
 
                             //compute time by project ref if type is not CORE
-                            if (issueType !== CONFIG.issueTypes.CORE) {
+                            if (issueType !== CONFIG.issueTypes.CORE.label) {
                                 var project = result['days']['projectsTotal'][issueRef.split('-')[0]];
                                 if (angular.isUndefined(project)) {
-                                    result['days']['projectsTotal'][issueRef.split('-')[0]] = [0, 0];
+                                    result['days']['projectsTotal'][issueRef.split('-')[0]] = [0, 0, 0];
                                 }
                                 var totalProject = totalDays['projectsTotal'][issueRef.split('-')[0]];
                                 if (angular.isUndefined(totalProject)) {
-                                    totalDays['projectsTotal'][issueRef.split('-')[0]] = [0, 0];
+                                    totalDays['projectsTotal'][issueRef.split('-')[0]] = [0, 0, 0];
                                 }
                                 //compute time for type PROJECT
-                                if (issueType === CONFIG.issueTypes.PROJECT) {
+                                if (issueType === CONFIG.issueTypes.PROJECT.label) {
                                     result['days']['projectsTotal'][issueRef.split('-')[0]][0] += worklogInDay;
                                     totalDays['projectsTotal'][issueRef.split('-')[0]][0] += worklogInDay;
                                 }
                                 //compute time for type BUGFIXING
-                                else if (issueType === CONFIG.issueTypes.BUGFIXING) {
+                                else if (issueType === CONFIG.issueTypes.BUGFIXING.label) {
                                     result['days']['projectsTotal'][issueRef.split('-')[0]][1] += worklogInDay;
                                     totalDays['projectsTotal'][issueRef.split('-')[0]][1] += worklogInDay;
+                                }
+                                //compute time for type UNDEFINED
+                                else if (issueType === CONFIG.issueTypes.UNDEFINED.label) {
+                                    result['days']['projectsTotal'][issueRef.split('-')[0]][2] += worklogInDay;
+                                    totalDays['projectsTotal'][issueRef.split('-')[0]][2] += worklogInDay;
                                 }
                             }
 
@@ -77,15 +84,18 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$q', 'CONFIG',
                             totalDays['Total'] += worklogInDay;
 
                             //compute time by project type
-                            if (issueType === CONFIG.issueTypes.CORE) {
-                                result['days'][CONFIG.issueTypes.CORE] += worklogInDay;
-                                totalDays[CONFIG.issueTypes.CORE] += worklogInDay;
-                            } else if (issueType === CONFIG.issueTypes.PROJECT) {
-                                result['days'][CONFIG.issueTypes.PROJECT] += worklogInDay;
-                                totalDays[CONFIG.issueTypes.PROJECT] += worklogInDay;
-                            } else if (issueType === CONFIG.issueTypes.BUGFIXING) {
-                                result['days'][CONFIG.issueTypes.BUGFIXING] += worklogInDay;
-                                totalDays[CONFIG.issueTypes.BUGFIXING] += worklogInDay;
+                            if (issueType === CONFIG.issueTypes.CORE.label) {
+                                result['days'][CONFIG.issueTypes.CORE.label] += worklogInDay;
+                                totalDays[CONFIG.issueTypes.CORE.label] += worklogInDay;
+                            } else if (issueType === CONFIG.issueTypes.PROJECT.label) {
+                                result['days'][CONFIG.issueTypes.PROJECT.label] += worklogInDay;
+                                totalDays[CONFIG.issueTypes.PROJECT.label] += worklogInDay;
+                            } else if (issueType === CONFIG.issueTypes.BUGFIXING.label) {
+                                result['days'][CONFIG.issueTypes.BUGFIXING.label] += worklogInDay;
+                                totalDays[CONFIG.issueTypes.BUGFIXING.label] += worklogInDay;
+                            } else if (issueType === CONFIG.issueTypes.UNDEFINED.label) {
+                                result['days'][CONFIG.issueTypes.UNDEFINED.label] += worklogInDay;
+                                totalDays[CONFIG.issueTypes.UNDEFINED.label] += worklogInDay;
                             }
 
                             var worklogsInfoArray = result['info'];
@@ -97,7 +107,7 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$q', 'CONFIG',
                                 ref: issueRef,
                                 type: issueType,
                                 time: worklogInDay,
-                                url: CONFIG.issueBaseUrl + issueRef
+                                url: CONFIG.jira.issueBaseUrl + issueRef
                             });
                             $$results[author] = {
                                 days: result['days'],
@@ -138,8 +148,12 @@ worklogApp.service('SearchSrv', ['$http', '$log', '$filter', '$q', 'CONFIG',
 
                 $$endDate = new Date(endDate + CONFIG.endDateSuffix);
 
+                var jql = CONFIG.jira.query.replace(/&&startDate\./g, startDateExtend);
+                jql = jql.replace(/&&endDate\./g, endDateExtend);
+
                 var params = {
-                    jql: "((category NOT IN('Hosting','Integration Projects') OR category is EMPTY) AND project not in('CSTDMTOTWODEV','CSTVCDMC4','HSDHUSDRB','CSTUSSDTLVPC','PRDDMC42','CSTVPCDMCMIGR','PRDSMSGIFT') AND summary!~'" + CONFIG.sl3Label + "' AND summary!~'" + CONFIG.projectBugfixingLabel + "') AND ((created >= " + startDateExtend + " AND created <= " + endDateExtend + ") OR (updated >= " + startDateExtend + " AND updated <= " + endDateExtend + "))"
+                    jql: jql,
+                    fields: CONFIG.jira.fields
                 };
 
                 $$deferred = $q.defer();
