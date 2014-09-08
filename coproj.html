@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Worklog - Jira</title>
+    <link rel="stylesheet" href="css/body.css" />
+    <link rel="stylesheet" href="vendors/bootstrap-css-only/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="vendors/select2/select2.css" />
+    <link rel="stylesheet" href="vendors/font-awesome-bower/css/font-awesome.css" />
+    <link rel="stylesheet" href="vendors/nvd3/nv.d3.css" />
+</head>
+
+<body ng-app="worklogApp">
+
+    <div id="wrapper" class="container" ng-controller="MainCtrl">
+        
+        <ul class="nav nav-tabs" role="tablist">
+            <li><a href="index.html">Home</a></li>
+            <li class="active"><a href="">Coproj</a></li>
+            <li><a href="copil.html">Copil</a></li>
+        </ul>
+
+        <h1>Coproj</h1>
+        <p class="text-muted">This web app allows you to generate coproj data.</p>
+
+        <form id="coprojForm" class="form-inline" role="form" ng-submit="coproj()">
+            <div class="form-group">
+                Search:
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="startDate">Month</label>
+                <p class="input-group" id="startDate">
+                    <input type="month" ng-model="coprojMonth"/>
+                </p>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <i ng-if="!finished" class="fa fa-spinner fa-spin fa-lg fa-fw"></i>
+        </form>
+        <alert type="{{alertType}}" ng-if="errorMsg" close="closeAlert()">{{errorMsg}}</alert>
+
+        <div id="followup-issues" style="position : inherit;">
+            <svg></svg>
+        </div>
+
+    </div>
+
+    <!-- scripts vendors -->
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="vendors/nvd3/nv.d3.min.js"></script>
+    <script src="vendors/jquery/dist/jquery.min.js"></script>
+    <script src="vendors/angular/angular.min.js"></script>
+    <script src="vendors/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="vendors/select2/select2.min.js"></script>
+    <script src="vendors/angular-ui-select2/src/select2.js"></script>
+    <script src="vendors/moment/moment.js"></script>
+    
+    <!-- scripts angular -->
+    <script src="app.js"></script>
+    <script src="constants/Config.js"></script>
+    <script src="services/SearchSrv.js"></script>
+    <script src="services/CoprojSrv.js"></script>
+    <script src="controllers/controller.js"></script>
+
+</body>
+
+</html>
