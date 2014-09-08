@@ -209,5 +209,9 @@ worklogApp.service('CoprojSrv', ['$http', '$log', '$filter', '$q', 'CONFIG',
             }
             
         };
+      
+        this.getMonthAsString = function (date) {
+            return $filter('date')(date, 'yyyy-MM');
+        };
         
 }]);

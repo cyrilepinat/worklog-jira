@@ -13,6 +13,8 @@ worklogApp.controller('MainCtrl', ['$scope', '$http', '$filter', '$log', 'CONFIG
                 $scope.openedStart = true;
             } else if (id === 'end') {
                 $scope.openedEnd = true;
+            } else if (id === 'month'){
+                $scope.openedMonth = true; 
             }
 
         };
@@ -67,7 +69,7 @@ worklogApp.controller('MainCtrl', ['$scope', '$http', '$filter', '$log', 'CONFIG
             $scope.closeAlert();
             $scope.results = {};
             $scope.finished = false;
-            CoprojSrv.generateGraph($scope.coprojMonth).then(function (data) {
+            CoprojSrv.generateGraph(CoprojSrv.getMonthAsString($scope.coprojMonth)).then(function (data) {
                 
                 function graphData() {
 

@@ -17,7 +17,7 @@
     <div id="wrapper" class="container" ng-controller="MainCtrl">
         
         <ul class="nav nav-tabs" role="tablist">
-            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html">Worklog</a></li>
             <li class="active"><a href="">Coproj</a></li>
             <li><a href="copil.html">Copil</a></li>
         </ul>
@@ -32,7 +32,12 @@
             <div class="form-group">
                 <label class="sr-only" for="startDate">Month</label>
                 <p class="input-group" id="startDate">
-                    <input type="month" ng-model="coprojMonth"/>
+                    <input type="text" class="form-control" placeholder="Enter a month" datepicker-popup="{{'yyyy-MMMM'}}" ng-model="coprojMonth" is-open="openedMonth" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" datepicker-mode="month" show-button-bar="false" close-text="Close" />
+                      <span class="input-group-btn">
+                          <button type="button" class="btn btn-default" ng-click="open('month', $event)">
+                              <i class="glyphicon glyphicon-calendar"></i>
+                          </button>
+                      </span>
                 </p>
             </div>
             <button type="submit" class="btn btn-primary">Search</button>
