@@ -5,7 +5,7 @@ worklogApp.constant("CONFIG", {
         path: "/jira/query"
     },
     jira: {
-        query: "((category NOT IN('Hosting','Integration Projects') OR category is EMPTY) AND project not in('CSTDMTOTWODEV','CSTVCDMC4','HSDHUSDRB','CSTUSSDTLVPC','PRDDMC42','CSTVPCDMCMIGR','PRDSMSGIFT') AND summary!~'SL3' AND summary!~'Project bugfixing') AND ((created >= &&startDate. AND created <= &&endDate.) OR (updated >= &&startDate. AND updated <= &&endDate.))",
+        query: "((category NOT IN('Hosting','Integration Projects') OR category is EMPTY) AND project not in('CSTDMTOTWODEV','CSTVCDMC4','HSDHUSDRB','CSTUSSDTLVPC','CSTVPCDMCMIGR','PRDSMSGIFT') AND summary!~'SL3' AND summary!~'Project bugfixing') AND ((created >= &&startDate. AND created <= &&endDate.) OR (updated >= &&startDate. AND updated <= &&endDate.))",
         lifeCycleStep: "customfield_10090",
         fields: "fixVersions,worklog,customfield_10090",
         dateFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSz",
